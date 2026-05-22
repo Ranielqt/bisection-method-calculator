@@ -1,0 +1,6 @@
+{
+  "name": "PIT Project – Numerical Methods Online Calculator",
+  "description": "An interactive, Notion‑styled online calculator and educational resource for the Bisection Method of root-finding, with full iteration steps, worked examples, and theoretical foundations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

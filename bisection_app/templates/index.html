@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+
+{% block title %}Bisection Root-Finding – PIT Project – Numerical Methods Online Calculator{% endblock %}
+
+{% block content %}
+<div class="calc-dashboard">
+    <!-- Left Column: Theory & Worked Examples -->
+    <div class="theory-column" style="display: flex; flex-direction: column; gap: 32px;">
+        <section class="notion-section" id="theory">
+            <h2>Mathematical Discussion</h2>
+            <p>The Bisection Method is a reliable root-finding algorithm formulated upon the <strong>Intermediate Value Theorem (IVT)</strong> for continuous functions.</p>
+            
+            <div class="notion-callout">
+                <span class="callout-emoji">📖</span>
+                <div class="callout-text">
+                    <strong>Intermediate Value Theorem:</strong> If a function \( f(x) \) is continuous on a closed interval \( [a, b] \), and \( f(a) \) and \( f(b) \) have opposite signs (\( f(a) \cdot f(b) < 0 \)), then there exists at least one real value \( c \) in the open interval \( (a, b) \) such that \( f(c) = 0 \).
+                </div>
+            </div>
+
+            <h3>Step-by-Step Algorithm:</h3>
+            <ol class="math-list" style="padding-left: 20px; margin-bottom: 20px;">
+                <li>Identify bracket boundaries \( a \) and \( b \) such that \( f(a) \cdot f(b) < 0 \).</li>
+                <li>Calculate the interval midpoint: \( c = \frac{a + b}{2} \).</li>
+                <li>Compute the function value \( f(c) \).</li>
+                <li>Evaluate stopping criteria: if \( |b - a| / 2 < \varepsilon \) or \( f(c) \approx 0 \), then \( c \) is the root.</li>
+                <li>Update the active boundary:
+                    <ul style="list-style-type: circle; padding-left: 20px; margin-top: 6px;">
+                        <li>If \( f(a) \cdot f(c) < 0 \), the root resides in the left half; set \( b = c \).</li>
+                        <li>Otherwise, the root resides in the right half; set \( a = c \).</li>
+                    </ul>
+                </li>
+                <li>Repeat from step 2.</li>
+            </ol>
+
+            <h3>Convergence Rate:</h3>
+            <p>The method is guaranteed to converge linearly, with the bracket error halving at every successive iteration: \( E_k = \frac{|b - a|}{2^k} \).</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+                <div style="background-color: var(--accent-green-bg); padding: 12px; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-green-text);">
+                    <h4 style="color: var(--accent-green-text); font-size: 13px; font-weight: 600; margin-bottom: 4px;">Advantages</h4>
+                    <p style="font-size: 11.5px; margin: 0; line-height: 1.4;">Guaranteed convergence; high numerical robustness; does not require evaluating derivatives.</p>
+                </div>
+                <div style="background-color: var(--accent-red-bg); padding: 12px; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-red);">
+                    <h4 style="color: var(--accent-red); font-size: 13px; font-weight: 600; margin-bottom: 4px;">Disadvantages</h4>
+                    <p style="font-size: 11.5px; margin: 0; line-height: 1.4;">Slow linear speed; fails to solve double root structures such as \( f(x) = (x-1)^2 \).</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="notion-section" id="examples">
+            <h2>Two Worked Examples (Step-by-Step)</h2>
+            
+            <div class="example-card" style="margin-bottom: 24px;">
+                <h3 style="color: var(--accent-blue); font-size: 15px;">Example 1: Cubic Polynomial Solver</h3>
+                <p>Find the real root of \( f(x) = x^3 - x - 2 \) on the interval \( [1, 2] \) with error tolerance \( \epsilon = 0.1 \).</p>
+                <div class="math-list" style="font-size: 12.5px; background: var(--bg-secondary); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-light); margin-bottom: 12px;">
+                    <div>• \( f(1) = 1^3 - 1 - 2 = -2.00000 \) (Negative sign)</div>
+                    <div>• \( f(2) = 2^3 - 2 - 2 = +4.00000 \) (Positive sign)</div>
+                    <div>• Opposite signs are confirmed: \( f(1) \cdot f(2) < 0 \).</div>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table class="notion-table">
+                        <thead>
+                            <tr>
+                                <th>k</th>
+                                <th>a</th>
+                                <th>b</th>
+                                <th style="color: var(--accent-blue);">c (Midpoint)</th>
+                                <th>f(c)</th>
+                                <th>Change Target Check</th>
+                                <th style="text-align: right;">Error Est.</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-mono">
+                            <tr>
+                                <td>1</td>
+                                <td>1.00000</td>
+                                <td>2.00000</td>
+                                <td style="font-weight: 500; color: var(--accent-blue);">1.50000</td>
+                                <td>-0.12500</td>
+                                <td>\( f(1.50000) \cdot f(2.00000) < 0 \rightarrow [1.50000, 2.00000] \)</td>
+                                <td style="text-align: right;">0.50000</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>1.50000</td>
+                                <td>2.00000</td>
+                                <td style="font-weight: 500; color: var(--accent-blue);">1.75000</td>
+                                <td>+1.60938</td>
+                                <td>\( f(1.50000) \cdot f(1.75000) < 0 \rightarrow [1.50000, 1.75000] \)</td>
+                                <td style="text-align: right;">0.25000</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>1.50000</td>
+                                <td>1.75000</td>
+                                <td style="font-weight: 500; color: var(--accent-blue);">1.62500</td>
+                                <td>+0.66602</td>
+                                <td>\( f(1.50000) \cdot f(1.62500) < 0 \rightarrow [1.50000, 1.62500] \)</td>
+                                <td style="text-align: right;">0.12500</td>
+                            </tr>
+                            <tr style="background-color: var(--accent-green-bg);">
+                                <td style="font-weight: bold; color: var(--accent-green-text);">4</td>
+                                <td>1.50000</td>
+                                <td>1.62500</td>
+                                <td style="font-weight: bold; color: var(--accent-blue);">1.56250</td>
+                                <td style="font-weight: bold; color: var(--accent-green-text);">+0.25293</td>
+                                <td style="color: var(--accent-green-text);">Error (0.06250) < Tolerance (0.1) reached!</td>
+                                <td style="text-align: right; font-weight: bold; color: var(--accent-green-text);">0.06250</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size: 12px; margin-top: 12px; padding: 10px; background-color: var(--bg-secondary); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-green-text); line-height: 1.5; color: var(--text-main);">
+                    <strong>Final Conclusion:</strong> After 4 iterations, the root is bracketed in \( [1.5, 1.625] \) with midpoint \( c = 1.5625 \) and error \( 0.0625 < 0.1 \). The true root is approximately \( 1.52138 \), which would require more iterations for higher precision.
+                </p>
+            </div>
+
+            <div class="example-card">
+                <h3 style="color: var(--accent-blue); font-size: 15px;">Example 2: Transcendental Trigonometric Solver</h3>
+                <p>Find the root of \( f(x) = \cos(x) - x \) on the interval \( [0, 1] \) with error tolerance \( \epsilon = 0.1 \).</p>
+                <div class="math-list" style="font-size: 12.5px; background: var(--bg-secondary); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-light); margin-bottom: 12px;">
+                    <div>• \( f(0) = \cos(0) - 0 = 1.00000 \) (Positive sign)</div>
+                    <div>• \( f(1) = \cos(1) - 1 \approx -0.45970 \) (Negative sign)</div>
+                    <div>• Opposite signs are confirmed: \( f(0) \cdot f(1) < 0 \).</div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="notion-table">
+                        <thead>
+                            <tr>
+                                <th>k</th>
+                                <th>a</th>
+                                <th>b</th>
+                                <th style="color: var(--accent-blue);">c (Midpoint)</th>
+                                <th>f(c)</th>
+                                <th>Change Target Check</th>
+                                <th style="text-align: right;">Error Est.</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-mono">
+                            <tr>
+                                <td>1</td>
+                                <td>0.00000</td>
+                                <td>1.00000</td>
+                                <td style="font-weight: 500; color: var(--accent-blue);">0.50000</td>
+                                <td>+0.37758</td>
+                                <td>\( f(0.50000) \cdot f(1.00000) < 0 \rightarrow [0.50000, 1.00000] \)</td>
+                                <td style="text-align: right;">0.50000</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>0.50000</td>
+                                <td>1.00000</td>
+                                <td style="font-weight: 500; color: var(--accent-blue);">0.75000</td>
+                                <td>-0.01831</td>
+                                <td>\( f(0.50000) \cdot f(0.75000) < 0 \rightarrow [0.50000, 0.75000] \)</td>
+                                <td style="text-align: right;">0.25000</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>0.50000</td>
+                                <td>0.75000</td>
+                                <td style="font-weight: 500; color: var(--accent-blue);">0.62500</td>
+                                <td>+0.18596</td>
+                                <td>\( f(0.62500) \cdot f(0.75000) < 0 \rightarrow [0.62500, 0.75000] \)</td>
+                                <td style="text-align: right;">0.12500</td>
+                            </tr>
+                            <tr style="background-color: var(--accent-green-bg);">
+                                <td style="font-weight: bold; color: var(--accent-green-text);">4</td>
+                                <td>0.62500</td>
+                                <td>0.75000</td>
+                                <td style="font-weight: bold; color: var(--accent-blue);">0.68750</td>
+                                <td style="font-weight: bold; color: var(--accent-green-text);">+0.08552</td>
+                                <td style="color: var(--accent-green-text);">Error (0.06250) < Tolerance (0.1) reached!</td>
+                                <td style="text-align: right; font-weight: bold; color: var(--accent-green-text);">0.06250</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size: 12px; margin-top: 12px; padding: 10px; background-color: var(--bg-secondary); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-green-text); line-height: 1.5; color: var(--text-main);">
+                    <strong>Final Conclusion:</strong> After 4 iterations, the root is bracketed in \( [0.625, 0.75] \) with midpoint \( c = 0.6875 \) and error \( 0.0625 < 0.1 \). The true root is approximately \( 0.73909 \), which would require more iterations for higher precision.
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Right Column: Interactive Bisection Calculator -->
+    <div class="interactive-column" id="calculator">
+        <section class="notion-section">
+            <h2>Bisection Method Calculator</h2>
+            <p style="margin-bottom: 20px; font-size: 13.5px; color: var(--text-muted);">Provide your continuous function parameters below to analyze real convergence rates.</p>
+            
+            {% if error_msg %}
+            <div class="notion-callout notion-callout-warning">
+                <span class="callout-emoji">⚠️</span>
+                <div class="callout-text font-mono">
+                    <strong>Error:</strong> {{ error_msg }}
+                </div>
+            </div>
+            {% endif %}
+
+            <form action="{{ url_for('index') }}#calculator" method="POST" id="calculator-form" class="notion-form">
+                <div class="form-group">
+                    <label class="form-label">Function \( f(x) \)</label>
+                    <input type="text" name="function" value="{{ function }}" class="form-control text-mono" required placeholder="x**3 - x - 2">
+                    <div class="form-control-hint">Accepts standard notation: exponents can use <code>**</code> or <code>^</code>. standard operations e.g. <code>cos(x)</code>, <code>exp(-x)</code>, <code>log(x)</code>, <code>sqrt(x)</code>, <code>sin(x)</code>, are verified.</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Left bound \( a \)</label>
+                        <input type="text" name="endpoint_a" value="{{ endpoint_a }}" class="form-control text-mono" required placeholder="1.0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Right bound \( b \)</label>
+                        <input type="text" name="endpoint_b" value="{{ endpoint_b }}" class="form-control text-mono" required placeholder="2.0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Error Tolerance \( \varepsilon \)</label>
+                        <input type="text" name="tolerance" value="{{ tolerance }}" class="form-control text-mono" required placeholder="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Max Iterations</label>
+                        <input type="number" name="max_iterations" value="{{ max_iterations }}" class="form-control text-mono" required placeholder="100" min="1">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-notion">
+                    <span>⚡ Calculate Approximation</span>
+                </button>
+            </form>
+
+            {% if result %}
+            <div class="results-container" style="margin-top: 32px; border-top: 1px solid var(--border-light); padding-top: 24px;">
+                <span class="badge-success">Computation Succeeded</span>
+                
+                {% if result.warning %}
+                <div class="notion-callout" style="background-color: var(--accent-red-bg); border-left-color: var(--accent-red); color: var(--text-main);">
+                    <span class="callout-emoji">⚠️</span>
+                    <div class="callout-text font-mono" style="font-size: 12px;">
+                        {{ result.warning }}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if result.message %}
+                <div class="notion-callout notion-callout-success">
+                    <span class="callout-emoji">✨</span>
+                    <div class="callout-text" style="font-size: 13.5px;">
+                        {{ result.message }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="outcome-fields">
+                    <div class="outcome-card">
+                        <div class="outcome-title">Approximate Root (c*)</div>
+                        <div class="outcome-value text-mono" style="font-size: 18px;">{{ "%.5f"|format(result.root) }}</div>
+                    </div>
+                    <div class="outcome-card">
+                        <div class="outcome-title">Iterations</div>
+                        <div class="outcome-value text-mono" style="font-size: 18px;">{{ result.iterations }}</div>
+                    </div>
+                    <div class="outcome-card">
+                        <div class="outcome-title">Error Estimate</div>
+                        <div class="outcome-value text-mono" style="font-size: 14px; word-break: break-all;">
+                            {% if result.error_est < 1e-4 and result.error_est > 0 %}
+                                {{ "%.5e"|format(result.error_est) }}
+                            {% else %}
+                                {{ "%.5f"|format(result.error_est) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; margin-bottom: 12px; flex-wrap: wrap; gap: 12px;">
+                    <h3 style="margin: 0; font-size: 14px; text-transform: uppercase; color: var(--text-muted); tracking-wider: 0.05em;">Iteration Table Summary</h3>
+                    <button id="export-txt-btn" onclick="exportAsText()" class="btn-notion" style="margin: 0; padding: 6px 12px; font-size: 11.5px; width: auto; background-color: var(--text-main); color: var(--bg-main); border: 1px solid var(--border-light); cursor: pointer; border-radius: var(--radius-sm); font-weight: 500; display: inline-flex; align-items: center; gap: 6px;">
+                        <span>📥 Export Results as Text</span>
+                    </button>
+                </div>
+                <div class="table-wrapper" style="max-height: 280px; overflow-y: auto;">
+                    <table class="notion-table">
+                        <thead style="position: sticky; top: 0; z-index: 1;">
+                            <tr>
+                                <th>#</th>
+                                <th>a</th>
+                                <th>b</th>
+                                <th>Midpoint (c)</th>
+                                <th>f(c)</th>
+                                <th style="text-align: right;">Error Est.</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-mono" style="font-size: 12px;">
+                            {% for row in result.table %}
+                            <tr>
+                                <td style="font-weight: bold; color: var(--text-muted);">{{ row.iter }}</td>
+                                <td>{{ "%.5f"|format(row.a) }}</td>
+                                <td>{{ "%.5f"|format(row.b) }}</td>
+                                <td style="font-weight: 500; color: var(--accent-blue);">{{ "%.5f"|format(row.c) }}</td>
+                                <td>{{ "%.5f"|format(row.fc) }}</td>
+                                <td style="text-align: right;">
+                                    {% if row.error < 1e-4 and row.error > 0 %}
+                                        {{ "%.5e"|format(row.error) }}
+                                    {% else %}
+                                        {{ "%.5f"|format(row.error) }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <script>
+                function exportAsText() {
+                    let content = "";
+                    content += "========================================\n";
+                    content += "BISECTION METHOD RESULTS\n";
+                    content += "========================================\n\n";
+                    content += "Function: f(x) = {{ function }}\n";
+                    content += "Interval: [{{ "%.5f"|format(endpoint_a|float) }}, {{ "%.5f"|format(endpoint_b|float) }}]\n";
+                    content += "Tolerance: {{ tolerance }}\n";
+                    content += "Max Iterations: {{ max_iterations }}\n\n";
+                    content += "----------------------------------------\n";
+                    content += "RESULTS\n";
+                    content += "----------------------------------------\n";
+                    content += "Root: {{ "%.5f"|format(result.root|float) }}\n";
+                    content += "Iterations: {{ result.iterations }}\n";
+                    content += "Error: {% if result.error_est < 1e-4 and result.error_est > 0 %}{{ "%.5e"|format(result.error_est|float) }}{% else %}{{ "%.5f"|format(result.error_est|float) }}{% endif %}\n\n";
+                    content += "----------------------------------------\n";
+                    content += "ITERATION TABLE\n";
+                    content += "----------------------------------------\n";
+                    content += "Iter | a        | b        | c        | f(c)     | Error\n";
+                    {% for row in result.table %}
+                    content += "{{ row.iter }}".padEnd(4) + " | " +
+                               "{{ "%.5f"|format(row.a|float) }}".padEnd(8) + " | " +
+                               "{{ "%.5f"|format(row.b|float) }}".padEnd(8) + " | " +
+                               "{{ "%.5f"|format(row.c|float) }}".padEnd(8) + " | " +
+                               "{{ "%.5f"|format(row.fc|float) }}".padEnd(8) + " | " +
+                               "{% if row.error < 1e-4 and row.error > 0 %}{{ "%.5e"|format(row.error|float) }}{% else %}{{ "%.5f"|format(row.error|float) }}{% endif %}".padEnd(8) + "\n";
+                    {% endfor %}
+                    content += "========================================\n";
+
+                    let blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+                    let link = document.createElement("a");
+                    link.href = URL.createObjectURL(blob);
+                    link.download = "bisection_results.txt";
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }
+                </script>
+            </div>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}

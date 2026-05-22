@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PIT Project – Numerical Methods Online Calculator{% endblock %}</title>
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- MathJax for TeX rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content container">
+            <div class="logo">
+                <span class="logo-emoji">📐</span>
+                <div class="logo-text">
+                    <span class="logo-brand">PIT Project</span>
+                    <span class="logo-sub">Numerical Methods Online Calculator</span>
+                </div>
+            </div>
+            <nav class="header-nav">
+                <a href="#theory" class="nav-link">Theory</a>
+                <a href="#examples" class="nav-link">Worked Examples</a>
+                <a href="#calculator" class="nav-link active">Bisection Calculator</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="main-footer">
+        <div class="container footer-content">
+            <p>&copy; 2026 PIT Project – Numerical Methods Online Calculator. Developed with extreme attention to numerical details.</p>
+            <p class="footer-sub text-mono">Validated according to standard Bisection Method guidelines.</p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
